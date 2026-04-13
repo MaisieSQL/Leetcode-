@@ -1,4 +1,4 @@
-# Leetcode-笨蛋之书
+# Leetcode-The_Marauder_Map_of_idiots（笨蛋之书）
 
 笨蛋，也有笨蛋的底气和尊严。这里是专属于笨蛋的leetcode活点地图。送给所有打算重启刷题之旅的平凡大笨蛋们。
 
