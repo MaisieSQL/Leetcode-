@@ -69,7 +69,7 @@
 2. **死磕 Medium 拿 Offer**：Google 面试 80% 的题目都在 Medium，特别是 Sliding Window 和 Two Pointers 的结合。
 3. **跳过无谓的 Hard**：除非你已经把前 5 类彻底吃透，否则不要在大题量上浪费算力。
 
-# 📑 Google Array 高频经典题单 (Priority List)
+# 📑 ROUND 1: Google Array 高频经典题单 (Priority List)
 
 > **Vibe**: 这里的每一道题都是 Google 面试官的“老朋友”。掌握了这些，你就掌握了 Array 的 80% 逻辑。
 
@@ -105,3 +105,118 @@
    - 基础不稳先看 **1, 26, 283**。
    - 突破 $O(\log n)$ 必刷 **33, 34**。
    - 挑战 Google Hard 选 **42, 84**。
+  
+# 📑 ROUND 2: Google Array 每种算法做10道Easy/Medium/Hard，加深熟悉过程(吃屎，也要反复认真咀嚼)
+
+# 🛡️ ROUND 2: Google Array 专项突击清单 (60 题)
+
+> **Vibe**: 10道题一个阵地。不求数量，求的是对该“步法”的肌肉记忆。
+
+---
+
+## 1. 双指针 (Two Pointers) —— 左右包抄
+*核心逻辑：在有序数组或特定约束下，利用两个指针减少搜索空间。*
+
+| 序号 | 题目 | 难度 | 重点 |
+| :--- | :--- | :--- | :--- |
+| 283 | Move Zeroes | Easy | 快慢指针基础 |
+| 125 | Valid Palindrome | Easy | 对撞指针基础 |
+| 167 | Two Sum II (Sorted) | Easy | 排序数组找和 |
+| 11 | Container With Most Water | Medium | 贪心 + 对撞 |
+| 15 | 3Sum | Medium | 排序 + 双指针去重 |
+| 16 | 3Sum Closest | Medium | 逼近法 |
+| 80 | Remove Duplicates II | Medium | 计数型双指针 |
+| 18 | 4Sum | Medium | $O(n^3)$ 逻辑降维 |
+| 42 | Trapping Rain Water | Hard | 双指针极值法 |
+| 151 | Reverse Words in a String | Medium | 翻转逻辑 |
+
+---
+
+## 2. 滑动窗口 (Sliding Window) —— 动态监控
+*核心逻辑：处理“连续”区间，通过维护窗口边界将 $O(n^2)$ 降为 $O(n)$。*
+
+| 序号 | 题目 | 难度 | 重点 |
+| :--- | :--- | :--- | :--- |
+| 643 | Max Average Subarray I | Easy | 固定长度窗口 |
+| 219 | Contains Duplicate II | Easy | 哈希 + 滑动窗口 |
+| 3 | Longest Substring... | Medium | 变长窗口核心题 |
+| 209 | Min Size Subarray Sum | Medium | 寻找最短区间 |
+| 1004 | Max Consecutive Ones III | Medium | 允许翻转的窗口 |
+| 567 | Permutation in String | Medium | 频率统计窗口 |
+| 438 | Find All Anagrams | Medium | 字符串匹配窗口 |
+| 904 | Fruit Into Baskets | Medium | 至多 K 个不同元素 |
+| 76 | Min Window Substring | Hard | 滑动窗口终极形态 |
+| 992 | Subarrays with K... | Hard | 窗口组合逻辑 |
+
+---
+
+## 3. 前缀和与差分 (Prefix Sum) —— 算力缓存
+*核心逻辑：预处理数据，让区间查询变成 $O(1)$。*
+
+| 序号 | 题目 | 难度 | 重点 |
+| :--- | :--- | :--- | :--- |
+| 303 | Range Sum Query | Easy | 基础缓存思想 |
+| 724 | Find Pivot Index | Easy | 左右平衡查找 |
+| 1991 | Find Middle Index | Easy | 基础索引搜索 |
+| 560 | Subarray Sum Equals K | Medium | 前缀和 + 哈希表 |
+| 523 | Continuous Subarray Sum | Medium | 同余定理应用 |
+| 974 | Subarray Sums Divisible | Medium | 模运算优化 |
+| 238 | Product Except Self | Medium | 前后缀乘积 |
+| 525 | Contiguous Array | Medium | 0/1 平衡转换 |
+| 1248 | Count Number of Nice... | Medium | 奇数个数转化 |
+| 1074 | Submatrix Sum Equals K | Hard | 二维前缀和 |
+
+---
+
+## 4. 二分查找 (Binary Search) —— 降维打击
+*核心逻辑：在有序或局部有序空间，利用 $O(\log n)$ 效率收缩范围。*
+
+| 序号 | 题目 | 难度 | 重点 |
+| :--- | :--- | :--- | :--- |
+| 704 | Binary Search | Easy | 标准模板 |
+| 35 | Search Insert Position | Easy | 查找插入点 |
+| 33 | Search in Rotated Array | Medium | 旋转数组逻辑 |
+| 34 | First/Last Position | Medium | 边界搜索逻辑 |
+| 81 | Search in Rotated II | Medium | 含重复元素处理 |
+| 153 | Find Min in Rotated | Medium | 寻找拐点 |
+| 162 | Find Peak Element | Medium | 局部二分思想 |
+| 540 | Single Element... | Medium | 奇偶索引二分 |
+| 4 | Median of Two... | Hard | 数组二分终极题 |
+| 410 | Split Array Largest Sum | Hard | 答案值域二分 |
+
+---
+
+## 5. 排序与分治 (Sorting & Partition) —— 重新排队
+*核心逻辑：通过调整顺序（如快排、堆排思想）获取特定特征。*
+
+| 序号 | 题目 | 难度 | 重点 |
+| :--- | :--- | :--- | :--- |
+| 88 | Merge Sorted Array | Easy | 逆向填充双指针 |
+| 912 | Sort an Array | Medium | 手写快排/归并 |
+| 75 | Sort Colors | Medium | 三路快排 (DNF) |
+| 215 | Kth Largest Element | Medium | Quickselect 思想 |
+| 56 | Merge Intervals | Medium | 区间重叠处理 |
+| 57 | Insert Interval | Medium | 区间插入维护 |
+| 973 | K Closest Points... | Medium | 堆排序应用 |
+| 179 | Largest Number | Medium | 自定义排序规则 |
+| 493 | Reverse Pairs | Hard | 归并排序求逆序对 |
+| 327 | Count of Range Sum | Hard | 归并 + 前缀和 |
+
+---
+
+## 6. 原地修改与哈希思想 (In-place & Cyclic Sort) —— 内存博弈
+*核心逻辑：不使用额外数组，利用下标或符号作为标记位。*
+
+| 序号 | 题目 | 难度 | 重点 |
+| :--- | :--- | :--- | :--- |
+| 26 | Remove Duplicates | Easy | 原地覆盖 |
+| 27 | Remove Element | Easy | 基础交换 |
+| 448 | Find All Numbers Disappeared | Easy | 负号标记法 |
+| 442 | Find All Duplicates | Medium | 符号标记进阶 |
+| 287 | Find the Duplicate | Medium | 快慢指针找环 |
+| 189 | Rotate Array | Medium | 翻转法实现旋转 |
+| 41 | First Missing Positive | Hard | 桶排序/原地哈希 |
+| 31 | Next Permutation | Medium | 字典序变换 |
+| 48 | Rotate Image | Medium | 矩阵原地翻转 |
+| 289 | Game of Life | Medium | 状态压缩标记 |
+
