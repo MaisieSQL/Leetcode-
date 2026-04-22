@@ -1252,7 +1252,7 @@ except ValueError as e:
 -------------------------------------------------------------------------------------------------------------------------------------
 
 <details style="margin-left: 20px;">
-<summary>  🏗️  迭代器 & 生成器 </summary>
+<summary>  🏗️  F.迭代器 & 生成器 </summary>
 
 ```mermaid
 graph TD
