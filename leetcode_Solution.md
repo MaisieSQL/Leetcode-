@@ -350,3 +350,33 @@ class Solution:
 ```
 ---
 
+## LeetCode 167 两数之和 II 
+
+输入有序数组📝 题目描述给你一个下标从 1 开始的整数数组 numbers ，该数组已按 非递减顺序 排列，请你从数组中找出满足相加之和等于目标数 target 的两个数。如果这两个数分别是 numbers[index1] 和 numbers[index2] ，则 1 <= index1 < index2 <= numbers.length 。以长度为 2 的整数数组 [index1, index2] 的形式返回这两个整数的下标 index1 和 index2。你可以假设每个输入 正好有一个解决方案 ，且你 不能 使用相同的元素两次。你的解决方案必须只使用 $O(1)$ 的额外空间。
+
+📥 输入输出示例
+
+示例 1：输入： numbers = [2, 7, 11, 15], target = 9输出： [1, 2]解释： 2 与 7 之和等于目标数 9 。因此 index1 = 1, index2 = 2 。返回 [1, 2] 。
+
+示例 2：输入： numbers = [2, 3, 4], target = 6输出： [1, 3]解释： 2 与 4 之和等于目标数 6 。因此 index1 = 1, index2 = 3 。返回 [1, 3] 。示例 3：输入： numbers = [-1, 0], target = -1输出： [1, 2]解释： -1 与 0 之和等于目标数 -1 。因此 index1 = 1, index2 = 2 。返回 [1, 2] 。
+
+💡 FDE/工程思维提示有序性利用：作为准 FDE，要敏锐察觉到“数组有序”这个约束。这意味着你可以使用双指针从两端向中间逼近，而不需要暴力遍历 。1-Indexed：在将算法封装为 API 或 MCP 工具时，必须严格遵守接口文档的下标规范（本题为从 1 开始计）。空间复杂度：限制 $O(1)$ 额外空间意味着你不能使用额外的哈希表，双指针是唯一解 。
+
+```Python
+class Solution:
+    def twoSum(self, numbers: List[int], target: int) -> List[int]:
+        left, right = 0, len(numbers) - 1
+        
+        while left < right:
+            current_sum = numbers[left] + numbers[right]
+            if current_sum == target:
+                return [left + 1, right + 1]
+            elif current_sum < target:
+                left += 1
+            else:
+                right -= 1
+        return []
+```
+
+---
+
