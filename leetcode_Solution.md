@@ -392,21 +392,89 @@ class Solution:
 * 阶段一：温故与深化（5 道题）
   
   1. 二分查找（从 1 道变 2 道，补齐边界核心）
-     【复习题 1】LeetCode 704. 二分查找 (Binary Search)目的：快速热身。确保你对基础二分（left <= right 还是 left < right）的闭区间/半开区间写法绝对熟练。
-     【进阶题 2】LeetCode 34. 在排序数组中查找元素的第一个和最后一个位置 目的：二分真正的难点在边界控制 。这道题要求你分别去寻找左边界和右边界，是检验二分功底的试金石 。
+     *【复习题 1】LeetCode 704. 二分查找 (Binary Search)目的：快速热身。确保你对基础二分（left <= right 还是 left < right）的闭区间/半开区间写法绝对熟练。
+     *【进阶题 2】LeetCode 34. 在排序数组中查找元素的第一个和最后一个位置 目的：二分真正的难点在边界控制 。这道题要求你分别去寻找左边界和右边界，是检验二分功底的试金石 。
      
   3. 滑动窗口与双指针（融合进阶，挑战中高难度）
-     【复习题 3】LeetCode 3. 无重复字符的最长子串 目的：最经典的不定长滑动窗口 。复习 right 负责扩张、left 负责收缩的对撞/同向指针节奏 。
-     【复习题 4】LeetCode 167. 两数之和 II - 输入有序数组 目的：复习你的对撞指针技巧 。利用有序性，两头往中间靠拢，秒杀原本需要 $O(n^2)$ 的问题 。
-     【进阶题 5】LeetCode 11. 盛最多水的容器 目的：对撞指针的贪心思考 。为什么每次只能移动较短的那根柱子 ？这道中等题能帮你彻底吃透双指针的移动逻辑。
+     *【复习题 3】LeetCode 3. 无重复字符的最长子串 目的：最经典的不定长滑动窗口 。复习 right 负责扩张、left 负责收缩的对撞/同向指针节奏 。
+     *【复习题 4】LeetCode 167. 两数之和 II - 输入有序数组 目的：复习你的对撞指针技巧 。利用有序性，两头往中间靠拢，秒杀原本需要 $O(n^2)$ 的问题 。
+     *【进阶题 5】LeetCode 11. 盛最多水的容器 目的：对撞指针的贪心思考 。为什么每次只能移动较短的那根柱子 ？这道中等题能帮你彻底吃透双指针的移动逻辑。
 
 * 阶段二：知新（3 道题）
   
   3. 全新算法：单调栈 (Monotonic Stack)一句话大白话：它是一个特制的栈，里面的元素要么单调递增，要么单调递减 。每当新来的元素破坏了单调性，就要开始“弹栈”并触发结算 。专门用来搞定**“寻找下一个更大/更小元素”**的 $O(n)$ 神器 。
      
-     【新题 1】LeetCode 739. 每日温度 (Daily Temperatures) 核心考点：单调栈的教科书级母题 。寻找“下一个比今天高的温度在几天后” 。维持一个单调递减栈，新元素大就弹栈算差值 。
-     
-     【新题 2】LeetCode 496. 下一个更大元素 I 核心考点：单调栈 + 哈希表 。用单调栈预处理出右边第一个更大元素，存进 Map 里供随时查询 。
-     
-     【新题 3】LeetCode 503. 下一个更大元素 II核心考点：循环数组的处理。如果数组是环形的（末尾的下一个是开头）该怎么办？利用“模拟遍历两次数组”或取模运算（i % n），配合单调栈解决。
+     *【新题 1】LeetCode 739. 每日温度 (Daily Temperatures) 核心考点：单调栈的教科书级母题 。寻找“下一个比今天高的温度在几天后” 。维持一个单调递减栈，新元素大就弹栈算差值 。
+     *【新题 2】LeetCode 496. 下一个更大元素 I 核心考点：单调栈 + 哈希表 。用单调栈预处理出右边第一个更大元素，存进 Map 里供随时查询 。
+     *【新题 3】LeetCode 503. 下一个更大元素 II核心考点：循环数组的处理。如果数组是环形的（末尾的下一个是开头）该怎么办？利用“模拟遍历两次数组”或取模运算（i % n），配合单调栈解决。
 
+## 704
+
+704. Binary Search
+
+Given an array of integers nums which is sorted in ascending order, and an integer target, write a function to search target in nums. If target exists, then return its index. Otherwise, return -1.
+
+You must write an algorithm with O(log n) runtime complexity.
+
+Example 1:
+
+Input: nums = [-1,0,3,5,9,12], target = 9
+Output: 4
+Explanation: 9 exists in nums and its index is 4
+Example 2:
+
+Input: nums = [-1,0,3,5,9,12], target = 2
+Output: -1
+Explanation: 2 does not exist in nums so return -1
+ 
+
+Constraints:
+
+1 <= nums.length <= 104
+-104 < nums[i], target < 104
+All the integers in nums are unique.
+nums is sorted in ascending order.
+
+```Python
+class Solution:
+    def search(self, nums: List[int], target: int) -> int:
+        left, right = 0, len(nums) - 1
+
+        while left <= right:
+            mid = left + (right - left) // 2
+            
+            if nums[mid] > target:
+                right = mid - 1
+            elif nums[mid] < target:
+                left = mid + 1
+            else:
+                return mid 
+        return -1
+```
+--
+
+## 34
+
+--
+
+## 3
+
+--
+
+## 167 
+
+--
+
+## 11
+
+--
+
+## 739
+
+--
+
+## 496
+
+--
+
+## 503
