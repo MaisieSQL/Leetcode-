@@ -170,3 +170,157 @@ Google 极其看重基础。常考题型包括：
 #
 # 如果循环结束未找到，返回空 (理论上题目保证有解)
 ```
+
+---
+
+# 🗺️ Python Data Structures Cheat Sheet (Python3 语法高频速查)
+
+## 1. 数组 / 列表 (Array / List)
+> **物理本质**：内存中连续存储的线性表，支持极其暴力的随机访问。
+
+### 💻 常用高频语法
+```python
+arr = [1, 2, 3]
+
+# 查 (Read)
+val = arr[0]                # O(1) 随机访问下标
+idx = arr.index(2)          # O(n) 查找元素 2 第一次出现的下标
+
+# 改 (Update)
+arr[0] = 99                 # O(1) 修改指定位置
+
+# 增 (Insert)
+arr.append(4)               # O(1) 尾部追加 -> [99, 2, 3, 4]
+arr.insert(1, 88)           # O(n) 在下标 1 处硬插 -> [99, 88, 2, 3, 4] （后面元素全往后挪）
+
+# 删 (Delete)
+arr.pop()                   # O(1) 弹出尾部元素并返回 -> 4
+arr.pop(1)                  # O(n) 弹出下标 1 的元素 -> 88 （后面元素全往前挪）
+arr.remove(3)               # O(n) 移除全场第一个数值为 3 的元素
+
+# 切片与排序 (Slicing & Sorting)
+sub = arr[1:3]              # O(k) 切片提取
+arr.sort()                  # O(n log n) 原地排序 (Timsort 算法)
+sorted_arr = sorted(arr)    # O(n log n) 产生新数组排序
+```
+
+## 2. 字典 / 哈希表 (Dict / Hash Map)
+物理本质：键值对映射。Python 3.7+ 后，dict 在内部实现上默认保证了插入顺序。
+
+💻 常用高频语法
+
+```python
+mydict = {"apple": 1, "banana": 2}
+
+# 查 (Read)
+val = mydict["apple"]                # O(1) 暴力查找，若 key 不存在会直接抛出 KeyError 崩溃！
+val = mydict.get("orange", -1)       # O(1) 安全查找！防崩神技，找不到就返回默认值 -1
+
+# 增 / 改 (Insert / Update)
+mydict["orange"] = 3                 # O(1) key 不存在则新增，存在则覆盖修改
+
+# 删 (Delete)
+del mydict["apple"]                  # O(1) 强行删除
+val = mydict.pop("banana")           # O(1) 弹出并返回对应的 value
+
+# 遍历 (Traverse)
+for key in mydict:                   # 遍历所有 key
+    print(key)
+for key, val in mydict.items():      # 同时遍历 key 和 value (极常用)
+    print(key, val)
+
+# 💡 特殊大招：计数器 (Counter)
+from collections import Counter
+counts = Counter([1, 2, 2, 3, 3, 3]) # 瞬间统计频次 -> {3: 3, 2: 2, 1: 1}
+```
+
+
+## 3. 栈 (Stack)
+物理本质：后进先出 (LIFO)。在 Python 中，不需要引入任何第三方库，直接用普通的 list 就是最高效的栈。
+
+💻 常用高频语法
+
+```python
+stack = []
+
+# 压栈 (Push)
+stack.append(10)            # O(1) 向栈顶（列表尾部）压入元素
+stack.append(20)            # 此时 stack = [10, 20]
+
+# 查看栈顶 (Peek)
+if stack:                   # ⚠️ 注意：看栈顶前必须判空，否则空栈 stack[-1] 会崩溃
+    top_val = stack[-1]     # O(1) 拿到 20，但不对栈进行破坏
+
+# 弹栈 (Pop)
+popped_val = stack.pop()    # O(1) 弹出并返回栈顶元素 -> 20
+                            # 此时 stack = [10]
+```
+
+## 4. 队列 (Queue)物理本质：先进先出 (FIFO)。⚠️ 严禁使用普通 list 当队列（因为 list.pop(0) 是 $O(n)$）。必须引入标准库 collections.deque（双端队列）。
+
+💻 常用高频语法
+
+```python
+from collections import deque
+queue = deque()
+
+# 入队 (Enqueue)
+queue.append("顾客A")        # O(1) 从队尾（右侧）进队
+queue.append("顾客B")        # 此时 queue = deque(['顾客A', '顾客B'])
+
+# 出队 (Dequeue)
+if queue:                   # ⚠️ 同样需要先判空
+    first_out = queue.popleft() # O(1) 从队头（左侧）完美弹出 -> "顾客A"
+                                # 此时 queue = deque(['顾客B'])
+
+# 查看队头
+front = queue[0]            # O(1) 仅查看，不弹出
+```
+
+## 5. 堆 / 优先队列 (Heap / Priority Queue)
+物理本质：完全二叉树。Python 内置的 heapq 模块默认是“小顶堆”（堆顶永远是全场最小的元素）。
+
+💻 常用高频语法
+```python
+import heapq
+
+heap = []
+
+# 增 (Push)
+heapq.heappush(heap, 5)     # O(log n) 放入元素
+heapq.heappush(heap, 1)     # O(log n) 放入元素
+heapq.heappush(heap, 3)     # 此时 heap[0] 必定是全场最小的 1
+
+# 查 (Peek)
+min_val = heap[0]           # O(1) 直接瞄一眼堆顶的最小值，不弹出 -> 1
+
+# 删 (Pop)
+smallest = heapq.heappop(heap) # O(log n) 弹出并返回堆顶的最小值 -> 1
+                               # 此时堆自动重组，新堆顶 heap[0] 变成 3
+
+# 💡 两个高级绝招：
+# 1. 数组瞬间堆化 (Heapify)
+nums = [5, 3, 8, 1]
+heapq.heapify(nums)         # O(n) 速度惊人！直接原地把普通列表整改成符合堆特性的列表
+
+# 2. 怎么变大顶堆？（面试大高频）
+# Python 只有小顶堆。想用大顶堆，存入时把数值【取负数】即可！
+max_heap = []
+heapq.heappush(max_heap, -5) # 存入 5 的相反数
+heapq.heappush(max_heap, -10)
+# 弹出时，再取负数还原
+real_max = -heapq.heappop(max_heap) # 弹出 -10，取负还原成 10！
+```
+
+***
+
+### 💡 绝密大白话避坑指南（面试防挂分）：
+
+1. **查 Dict 之前，用 `.get()` 或者是先用 `if key in mydict:` 护体**，不然直接用方括号爆查不存在的 key，程序当场崩溃挂掉。
+2. **List 的 `pop()` 是 $O(1)$，但是 `pop(0)` 是 $O(n)$**。所以在需要实现高频“先进先出”的队列场景里，绝对不要图省事用 List，老老实实用 `from collections import deque`！
+3. **看栈顶 `stack[-1]` 或者是堆顶 `heap[0]` 之前，一定要写一句 `if stack:`**。空容器直接去瞅顶端，会直接触发 `IndexError` 翻车。
+
+有了这份全套内功语法卡，你的基础工程底座就彻底稳如泰山了！
+
+既然现在数据结构的武器库已经悉数上油、整装待发，咱们接下来是直接去把 **LeetCode 496（下一个更大元素）** 亲手撕个稀烂，还是正式挺进**二叉树 (Binary Tree)** 的崭新版图？
+
