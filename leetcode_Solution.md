@@ -499,21 +499,356 @@ class Solution:
 
 ## 34
 
+# 34. Find First and Last Position of Element in Sorted Array
+
+`Medium` `Topics` `Companies`
+
+## 📝 Description
+
+Given an array of integers `nums` sorted in non-decreasing order, find the starting and ending position of a given `target` value.
+
+If `target` is not found in the array, return `[-1, -1]`.
+
+You must write an algorithm with $O(\log n)$ runtime complexity.
+
+### Example 1:
+> **Input:** nums = [5,7,7,8,8,10], target = 8
+> **Output:** [3,4]
+
+### Example 2:
+> **Input:** nums = [5,7,7,8,8,10], target = 6
+> **Output:** [-1,-1]
+
+---
+
+## 💡 Core Strategy (Two Binary Searches)
+
+We split the problem into two distinct binary searches using the **Closed Interval `[left, right]`** approach:
+1. **Find Left Bound**: When `nums[mid] == target`, instead of returning immediately, we restrict our search to the left half (`right = mid - 1`) to find the first occurrence.
+2. **Find Right Bound**: When `nums[mid] == target`, we restrict our search to the right half (`left = mid + 1`) to find the last occurrence.
+
+---
+
+## 💻 Python3 Solution
+
+```python
+class Solution:
+    def searchRange(self, nums: List[int], target: int) -> List[int]:
+        
+        # Helper function to find either the left or right boundary
+        def findBound(isLeft: bool) -> int:
+            left, right = 0, len(nums) - 1
+            bound = -1
+            
+            while left <= right:
+                mid = left + (right - left) // 2
+                
+                if nums[mid] < target:
+                    left = mid + 1
+                elif nums[mid] > target:
+                    right = mid - 1
+                else:
+                    # Found target! Record the position
+                    bound = mid
+                    if isLeft:
+                        right = mid - 1  # Keep looking left
+                    else:
+                        left = mid + 1   # Keep looking right
+            return bound
+
+        left_idx = findBound(isLeft=True)
+        right_idx = findBound(isLeft=False)
+        
+        return [left_idx, right_idx]
+```
 --
 
-## 3
+## 3. Longest Substring Without Repeating Characters
 
+## 📝 Description
+
+Given a string `s`, find the length of the **longest substring** without repeating characters.
+
+### Example 1:
+> **Input:** s = "abcabcbb"
+> **Output:** 3
+> **Explanation:** The answer is "abc", with the length of 3.
+
+### Example 2:
+> **Input:** s = "bbbbb"
+> **Output:** 1
+> **Explanation:** The answer is "b", with the length of 1.
+
+### Example 3:
+> **Input:** s = "pwwkew"
+> **Output:** 3
+> **Explanation:** The answer is "wke", with the length of 3. 
+> Notice that the answer must be a substring, "pwke" is a subsequence and not a substring.
+
+### Constraints:
+* $0 \le \text{s.length} \le 5 \times 10^4$
+* `s` consists of English letters, digits, symbols and spaces.
+
+---
+
+## 💡 Core Strategy (Sliding Window - Map Optimize)
+
+We use a sliding window with two pointers `left` and `i` (as right pointer), combined with a hash map (`mydict`) to optimize the window shrinking process:
+
+1. **Check First**: Before updating the map, check if the current character `s[i]` already exists in `mydict` and its recorded index is within the current window (`mydict[s[i]] >= left`). If so, we catch a real duplicate, and `left` immediately "jumps" to `mydict[s[i]] + 1`.
+2. **Update Map**: After the check, we update or register the current character's latest index: `mydict[s[i]] = i`. **The order is crucial!** Checking must happen before updating to prevent the pointer from colliding with itself.
+3. **Update Max**: At each step, calculate the current valid window length using `i - left + 1` and update `max_length`.
+
+---
+
+## 💻 Python3 Solution
+
+```python
+class Solution:
+    def lengthOfLongestSubstring(self, s: str) -> int:
+        left = 0
+        mydict = {}
+        max_length = 0
+
+        for i in range(len(s)):
+            # 1. Check first: if the character is a true duplicate within the current window
+            if s[i] in mydict and mydict[s[i]] >= left:
+                # Left pointer jumps to the next position of the last occurrence
+                left = mydict[s[i]] + 1
+            
+            # 2. Update the ledger with the character's latest index
+            mydict[s[i]] = i
+            
+            # 3. Calculate and update the maximum length
+            max_length = max(max_length, i - left + 1)
+            
+        return max_length
+```
 --
 
 ## 167 
+# 167. Two Sum II - Input Array Is Sorted
+
+`Medium` `Topics` `Companies`
+
+## 📝 Description
+
+Given a **1-indexed** array of integers `numbers` that is already **sorted in non-decreasing order**, find two numbers such that they add up to a specific `target` number. Let these two numbers be `numbers[index1]` and `numbers[index2]` where $1 \le \text{index1} < \text{index2} \le \text{numbers.length}$.
+
+Return the indices of the two numbers, `index1` and `index2`, **added by one** as an integer array `[index1, index2]` of length 2.
+
+The tests are generated such that there is **exactly one solution**. You may not use the same element twice.
+
+Your algorithm must use only constant extra space.
+
+### Example 1:
+> **Input:** numbers = [2,7,11,15], target = 9
+> **Output:** [1,2]
+> **Explanation:** The sum of 2 and 7 is 9. Therefore, index1 = 1, index2 = 2. We return [1, 2].
+
+### Constraints:
+* $2 \le \text{numbers.length} \le 3 \times 10^4$
+* $-1000 \le \text{numbers}[i] \le 1000$
+* `numbers` is sorted in **non-decreasing order**.
+* $-1000 \le \text{target} \le 1000$
+* The tests are generated such that there is **exactly one solution**.
+
+---
+
+## 💡 Core Strategy (Two Pointers / Two-Way Collision)
+
+Since the array is already sorted, we can use two pointers starting from both ends moving towards each other:
+1. **Initialize**: `left` at index `0` (smallest element) and `right` at the last index (largest element).
+2. **Compare**: Calculate `current_sum = numbers[left] + numbers[right]`.
+   * If `current_sum == target`, we found the answer! Return `[left + 1, right + 1]` (because the problem asks for 1-based indexing).
+   * If `current_sum < target`, we need a larger value, so we advance `left += 1`.
+   * If `current_sum > target`, we need a smaller value, so we retreat `right -= 1`.
+
+---
+
+## 💻 Python3 Solution
+
+```python
+class Solution:
+    def twoSum(self, numbers: List[int], target: int) -> List[int]:
+        left = 0
+        right = len(numbers) - 1
+        
+        while left < right:
+            current_sum = numbers[left] + numbers[right]
+            
+            if current_sum == target:
+                # 题目要求返回的是 1-based 的下标，所以都要加 1
+                return [left + 1, right + 1]
+            elif current_sum < target:
+                left += 1   # 和太小了，左指针右移换个大数
+            else:
+                right -= 1  # 和太大了，右指针左移换个小数
+                
+        return []
+```
+LeetCode 167 题，用的是标准的、最纯正的双指针（Two Pointers）解法——具体来说，叫“相向双指针”（或者叫“对撞指针”） 。
+
+虽然滑动窗口本质上也是双指针的一种，但它们在解题的核心目的和指针移动规则上，有着非常微妙且关键的差别。我们花 1 分钟把这个彻底理清，以后你看一眼题目就能瞬间分类！
+
+🆚 167 题（双指针）与 滑动窗口 的核心区别
+1. 指针的移动方向不同
+
+滑动窗口（如 LeetCode 3）：属于同向双指针 。left 和 right 一前一后，都从数组的左边同向往右边冲 。两个指针中间围起来的区域，就像一个在向前滑动的“窗口” 。
+
+
+167 两数之和 II：属于相向双指针（对撞指针） 。left 站在数组的最左端（开头），right 站在数组的最右端（末尾） 。它们两个面对面，向中间靠拢 。
+
+2. 核心目的不同
+
+滑动窗口：通常是为了在全场找一个“连续的区间/子串”，这个区间要满足某种条件（比如不能有重复字符） 。
+
+
+167 题双指针：完全不是为了找连续区间，而是利用数组已经排好序（升序）的黄金特性，通过两头包抄，去揪出某两个特定的数字 。
+
+💡 167 题是怎么用“对撞指针”秒杀的？
+既然数组是有序的，我们让 left 指向最小的值，right 指向最大的值 。
+每次把它们两个指着的数字加起来（sum = nums[left] + nums[right]） ：
+
+如果 sum 刚好等于 target：恭喜你，直接抓到答案！
+
+
+如果 sum < target（小了）：说明现在的和不够大。怎么变大？因为数组是升序的，我们要让 left 往右走一步（left += 1），换一个大一点的数再试 。
+
+
+如果 sum > target（大了）：说明现在的和太大了。怎么变小？我们要让 right 往左走一步（right -= 1），换一个小一点的数再试 。
+
+这就是利用相向双指针在 O(n) 时间内搞定问题的全过程，中间没有任何“窗口”的概念 。
+
+#### 不理解two sum和two sum ii为什么方法不一样？看起来很像的两道题
+
+* 这个问题直接戳中了算法面试里最经典的一个“孪生兄弟”陷阱。这两道题不仅长得像，连名字都几乎一样，但解法却天差地别（Two Sum 用哈希表 ，Two Sum II 用双指针 ）。它们之所以走上两条不同的路，最核心的变量只有四个字：数组有序 。我们不聊复杂的公式，用最接地气的例子来看看这哥俩的底层差别：🆚 核心区别：有没有“引路导航”1. Two Sum II（有导航：直接两头包抄）在 Two Sum II 中，题目明确给了一个黄金条件：数组已经是升序排列的 。
+这就好比你在一个从小到大排好队的队伍里找两个人，让他们俩的身高加起来刚好等于一个目标值 。你让最矮的（left）和最高的（right）站出来加一下 。如果发现矮+高 < 目标值 ，你根本不需要再去试别的人了，因为 right 已经是全场最高了，他跟最矮的加起来都小，说明最矮的彻底没戏。你直接让 left 往右走一步，换个稍高一点的来试（left += 1） 。同理，如果矮+高 > 目标值，说明最高的那个太高了，必须换个稍矮一点的来试（right -= 1） 。💡 总结：因为数组有序，每一次相加都在给你“指路”（告诉你该调大还是调小），所以你可以用对撞双指针在 $O(n)$ 时间内搞定 。2. 第一题 Two Sum（无导航：只能四处打听）而第 1 题 Two Sum 坏就坏在数组是乱序的。比如 nums = [3, 1, 4, 2]，你想找目标值 5。如果你还想用双指针，left 指向 3，right 指向 2，相加等于 5 纯属运气好。如果是别的目标值呢？因为数组没有顺序：当 nums[left] + nums[right] < target 时，你根本不知道该把 left 右移还是把 right 左移，因为右移指不定遇到一个更小的数，左移指不定遇到一个更大的数。双指针失去了“导航”，瞎走只会漏掉正确答案。那第一题怎么破？——用“备忘录（哈希表）”既然不能两头包抄，数字们又是乱坐的，那我们就只能边走边记。当你遇到 3 时，你在心里（哈希表里）记账：{3: 0}，代表“3 来过了，在 0 号位”。同时你在想：“要是后面来个 2 就完美了（$5 - 3 = 2$）。”接着你走到 1，一查账本，里面没有 4，于是把 1 记上：{3: 0, 1: 1}。直到你走到 2，你拿 $5 - 2 = 3$ 去账本里一翻：“哈哈，3 之前来过，在 0 号位！” 瞬间凑成一对。📊 一张表彻底看懂两兄弟题目数组状态核心目的绝配算法时间复杂度空间复杂度Two Sum (第1题)乱序（Unsorted）边走边查，看谁和自己能凑成一对哈希表 (Hash Map)$O(n)$$O(n)$（需要开辟空间记账）Two Sum II (167题)升序（Sorted） 利用有序性，两头夹击逼近目标 双指针 (Two Pointers) $O(n)$ $O(1)$（省空间，不需要记账） 🎯 面试官的隐藏考点如果面试官在面试时出了第 1 题 Two Sum，然后问你：“能不能不用额外空间（空间复杂度 $O(1)$）来做？” 这时候他其实就是在疯狂暗示你：“你先去把数组用 sort() 排个序，不就变成 Two Sum II 了吗？然后你就可以用双指针把空间优化到 $O(1)$ 了！” 
 
 --
 
-## 11
+## 11. Container With Most Water
+
+`Medium`
+
+## 📝 Description
+
+You are given an integer array `height` of length `n`. There are `n` vertical lines drawn such that the two endpoints of the $i^{th}$ line are `(i, 0)` and `(i, height[i])`.
+
+Find two lines that together with the x-axis form a container, such that the container contains the most water.
+
+Return the maximum amount of water a container can store.
+
+**Notice** that you may not slant the container.
+
+### Example 1:
+> **Input:** height = [1,8,6,2,5,4,8,3,7]
+> **Output:** 49
+> **Explanation:** The vertical lines are represented by array [1,8,6,2,5,4,8,3,7]. In this case, the max area of water the container can contain is 49.
+
+### Example 2:
+> **Input:** height = [1,1]
+> **Output:** 1
+
+### Constraints:
+* $n == \text{height.length}$
+* $2 \le n \le 10^5$
+* $0 \le \text{height}[i] \le 10^4$
+
+## 💡 Core Strategy (Two Pointers + Greedy)
+
+We use a two-pointer approach starting from both ends (`left = 0` and `right = len(height) - 1`) and move toward each other:
+
+1. **Geometry Calculation**: The water volume is determined by `width * current_height`, where `width = right - left` (no `+ 1` because it represents geometric distance) and `current_height = min(height[left], height[right])` (limited by the shorter board).
+2. **Greedy Move**: At each step, we **always move the pointer pointing to the shorter line inward**.
+   * *Why?* Shifting the longer line inwards will only decrease the width while the height remains bottlenecked by the shorter line, ensuring a smaller area. 
+   * Only by moving the shorter line do we stand a chance of finding a taller boundary that might compensate for the loss in width.
+
+## 💻 Python3 Solution
+
+```python
+class Solution:
+    def maxArea(self, height: List[int]) -> int:
+        # Initialize two pointers at both ends
+        left, right = 0, len(height) - 1
+        max_water = 0
+        
+        while left < right:
+            # Calculate geometric width
+            width = right - left
+            # Height is bottlenecked by the shorter line (木桶效应)
+            current_height = min(height[left], height[right])
+            
+            # Update the maximum water volume
+            max_water = max(max_water, width * current_height)
+            
+            # Greedy Strategy: Move the shorter pointer inward
+            if height[left] < height[right]:
+                left += 1
+            else:
+                right -= 1
+                
+        return max_water
+```
 
 --
 
-## 739
+## 739. Daily Temperatures
+
+`Medium`
+
+## 📝 Description
+
+Given an array of integers `temperatures` represents the daily temperatures, return an array `answer` such that `answer[i]` is the number of days you have to wait after the $i^{th}$ day to get a warmer temperature. If there is no future day for which this is possible, keep `answer[i] == 0` instead.
+
+### Example 1:
+> **Input:** temperatures = [73,74,75,71,69,72,76,73]
+> **Output:** [1,1,4,2,1,1,0,0]
+
+### Example 2:
+> **Input:** temperatures = [30,40,50,60]
+> **Output:** [1,1,1,0]
+
+### Example 3:
+> **Input:** temperatures = [30,30,30]
+> **Output:** [0,0,0]
+
+### Constraints:
+* $1 \le \text{temperatures.length} \le 10^5$
+* $30 \le \text{temperatures}[i] \le 100$
+
+## 💡 Core Strategy (Monotonic Decreasing Stack)
+
+Whenever you see problems asking for **"finding the next greater/smaller element"**, your brain should instantly think of a **Monotonic Stack**!
+
+1. **The Ledger**: We maintain a stack that stores the **indices** of the days, and we ensure the corresponding temperatures of these indices inside the stack are always in **strictly decreasing order**.
+2. **The Encounter**: We iterate through the temperatures day by day. For the current day `i`:
+   * As long as today's temperature `temperatures[i]` is **warmer** than the temperature at the top of our stack (`temperatures[stack[-1]]`), it means the day at the top of the stack has finally found its "warmer day"!
+   * We pop that day out (`prev_index = stack.pop()`) and calculate the day difference: `answer[prev_index] = i - prev_index`.
+3. **The Push**: After popping all colder days, we push today's index `i` onto the stack to wait for its own warmer day in the future.
+
+
+## 💻 Python3 Solution
+
+```python
+class Solution:
+    def dailyTemperatures(self, temperatures: List[int]) -> List[int]:
+        n = len(temperatures)
+        ans = [0] * n
+        stack = []  # Monotonic decreasing stack storing indices
+        
+        for i in range(n):
+            # While stack is not empty and today's temp is hotter than the stack top temp
+            while stack and temperatures[i] > temperatures[stack[-1]]:
+                prev_index = stack.pop()
+                # Calculate how many days you had to wait
+                ans[prev_index] = i - prev_index
+                
+            # Push the current day's index into the stack
+            stack.append(i)
+            
+        return ans
+```
 
 --
 
