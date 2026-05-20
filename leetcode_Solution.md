@@ -962,4 +962,72 @@ class Solution:
 
 ---
 
-## 503
+## 503. Next Greater Element II
+
+`Medium` `Topics` `Companies`
+
+## 📝 Description
+
+Given a circular integer array `nums` (i.e., the next element of `nums[nums.length - 1]` is `nums[0]`), return *the **next greater number** for every element in `nums`*.
+
+The **next greater number** of a number `x` is the first greater number to its traversing-order next in the array, which means you could search circularly to find its next greater number. If it doesn't exist, return `-1` for this number.
+
+### Example 1:
+> **Input:** nums = [1,2,1]
+> **Output:** [2,-1,2]
+> **Explanation:** 
+> - The first 1's next greater number is 2.
+> - The number 2 can't find next greater number.
+> - The second 1's next greater number needs to search circularly, which is also 2.
+
+### Example 2:
+> **Input:** nums = [1,2,3,4,3]
+> **Output:** [2,3,4,-1,4]
+
+### Constraints:
+* $1 \le \text{nums.length} \le 10^4$
+* $-10^9 \le \text{nums}[i] \le 10^9$
+
+---
+
+## 💡 Core Strategy (Monotonic Stack + Circular Array Trick)
+
+This is the ultimate evolution of the Next Greater Element series. The only twist is the **circular array**. 
+
+### The Naive Way vs The Smart Way
+* **Naive**: Literally duplicate the array `nums = nums + nums` to simulate the circle. This works but wastes extra space.
+* **Smart (The Modulo Trick)**: We pretend the array is doubled ($2n$ in length), and use the **modulo operator (`% n`)** to map back to the real indices. This simulates walking through the array twice without using extra memory!
+
+### Algorithmic Steps:
+1. **Initialize**: Create a result array `ans` initialized with `-1`. Since we are calculating index-based differences or looking up by positions, we should store **indices** in our monotonic stack, just like LeetCode 739.
+2. **Double Traverse**: Run a `for` loop from `0` to `2n - 1`.
+3. **Real Index Mapping**: The current virtual index is `i`, but the real index in `nums` is `real_i = i % n`.
+4. **Monotonic Pop**: As long as `nums[real_i]` is greater than `nums[stack[-1]]`, it means the element at `stack[-1]` has found its next greater element! We pop it out and record: `ans[stack.pop()] = nums[real_i]`.
+5. **Conditional Push**: We only push `real_i` onto the stack during the first pass (`i < n`) or if it still needs to be evaluated, but pushing all `real_i` up to `2n` and letting the `while` clear them out naturally is the cleanest template.
+
+---
+
+## 💻 Python3 Solution
+
+```python
+class Solution:
+    def nextGreaterElement(self, nums: List[int]) -> List[int]:
+        n = len(nums)
+        ans = [-1] * n
+        stack = []  # Monotonic decreasing stack storing indices
+        
+        # Traverse the array virtually twice
+        for i in range(2 * n):
+            real_i = i % n  # Map virtual index back to actual array bounds
+            
+            # Standard Monotonic Stack pop logic
+            while stack and nums[real_i] > nums[stack[-1]]:
+                prev_index = stack.pop()
+                ans[prev_index] = nums[real_i]
+                
+            # We only need to push indices into the stack during the first traversal traversal pass
+            if i < n:
+                stack.append(real_i)
+                
+        return ans
+```
